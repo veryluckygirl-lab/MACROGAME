@@ -3,19 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MakroSymulator – Kampania Edukacyjna</title>
+<title>MakroSymulator – Kampania Finalna</title>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-900 font-sans">
 
-<header class="bg-blue-900 text-white p-6 shadow-lg">
-    <h1 class="text-3xl font-bold">MakroSymulator Polska – Kampania Edukacyjna</h1>
-    <p class="mt-1 text-blue-200">Ucz się gospodarki Polski od 1990 do 2010, podejmuj decyzje i zdobywaj osiągnięcia!</p>
+<header class="bg-gradient-to-r from-blue-900 to-indigo-700 text-white p-6 shadow-lg">
+    <h1 class="text-3xl font-bold">MakroSymulator Polska – Kampania Finalna</h1>
+    <p class="mt-1 text-blue-200">Podejmuj decyzje, ucz się ekonomii i zdobywaj medale!</p>
 </header>
 
 <main class="p-6 max-w-7xl mx-auto">
-    <!-- Informacje o gospodarce -->
+
+    <!-- Wskaźniki ekonomiczne -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-white p-4 shadow rounded hover:shadow-lg transition">
             <h3 class="font-semibold text-gray-700">Rok / Tura</h3>
@@ -38,7 +39,7 @@
     <!-- Panel decyzji -->
     {% if not state.campaign_completed %}
     <div class="bg-white p-6 shadow rounded mb-6">
-        <h2 class="text-2xl font-semibold mb-4">Podejmij decyzje gospodarcze</h2>
+        <h2 class="text-2xl font-semibold mb-4">Podejmij decyzje</h2>
         <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="p-4 bg-gray-50 rounded">
                 <h3 class="font-semibold mb-2">Polityka fiskalna</h3>
@@ -57,14 +58,14 @@
                 <input type="number" name="export_boost" step="0.01" class="w-full border rounded p-2">
             </div>
             <div class="md:col-span-2 text-center mt-4">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow">Zastosuj decyzje</button>
+                <button type="submit" class="bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-bold py-2 px-6 rounded shadow">Zastosuj decyzje</button>
             </div>
         </form>
     </div>
     {% else %}
     <div class="bg-green-100 p-6 shadow rounded mb-6 text-center">
-        <h2 class="text-2xl font-bold text-green-800">Kampania zakończona!</h2>
-        <p class="mt-2 text-green-700">Gratulacje! Twoja punktacja edukacyjna: {{ state.score | round(2) }}</p>
+        <h2 class="text-3xl font-bold text-green-800">Kampania zakończona!</h2>
+        <p class="mt-2 text-green-700">Twoja punktacja edukacyjna: {{ state.score | round(2) }}</p>
         <a href="{{ url_for('reset') }}" class="mt-3 inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow">Rozpocznij nową kampanię</a>
     </div>
     {% endif %}
@@ -77,23 +78,23 @@
 
     <!-- Osiągnięcia -->
     <div class="bg-white p-6 shadow rounded mb-6">
-        <h2 class="text-2xl font-semibold mb-4">Osiągnięcia i nagrody</h2>
+        <h2 class="text-2xl font-semibold mb-4">Osiągnięcia i medale</h2>
         <div class="flex flex-wrap gap-3">
             {% for ach in state.achievements %}
-                <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full font-medium">{{ ach }}</span>
+                <span class="bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full font-medium">{{ ach }}</span>
             {% endfor %}
         </div>
     </div>
 
-    <!-- Edukacja -->
+    <!-- Tutorial -->
     <div class="bg-white p-6 shadow rounded">
-        <h2 class="text-2xl font-semibold mb-4">Podpowiedzi edukacyjne</h2>
-        <ul class="list-disc pl-5 space-y-1">
-            <li>Polityka fiskalna (G, T) wpływa na PKB i inflację.</li>
-            <li>Polityka pieniężna (r) stabilizuje inflację i bezrobocie.</li>
-            <li>Inwestycje w technologię zwiększają PKB potencjalny.</li>
-            <li>Wsparcie eksportu pokazuje wpływ globalizacji.</li>
-            <li>Stabilizacja gospodarki nagradzana jest osiągnięciami.</li>
+        <h2 class="text-2xl font-semibold mb-4">Tutorial i podpowiedzi edukacyjne</h2>
+        <p>Krok {{ state.tutorial_step }}: Ucz się wpływu decyzji na PKB, inflację, bezrobocie i wzrost potencjalny.</p>
+        <ul class="list-disc pl-5 space-y-1 mt-2">
+            <li>G – wydatki rządowe, T – podatki.</li>
+            <li>r – stopa procentowa, inwestycje w technologię zwiększają PKB potencjalny.</li>
+            <li>Wsparcie eksportu pokazuje wpływ globalizacji i integracji gospodarczej.</li>
+            <li>Staraj się stabilizować inflację i bezrobocie – to daje osiągnięcia!</li>
         </ul>
     </div>
 </main>
@@ -103,8 +104,8 @@
     Plotly.newPlot('graph', graphs.data, graphs.layout, {responsive:true});
 </script>
 
-<footer class="bg-blue-900 text-white text-center py-4 mt-6">
-    © 2026 MakroSymulator Polska – Edukacja ekonomiczna
+<footer class="bg-gradient-to-r from-blue-900 to-indigo-700 text-white text-center py-4 mt-6">
+    © 2026 MakroSymulator Polska – Edukacja ekonomiczna | Rektor-approved
 </footer>
 </body>
 </html>
