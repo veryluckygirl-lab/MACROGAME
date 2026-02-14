@@ -40,7 +40,7 @@
     {% if not state.campaign_completed %}
     <div class="bg-white p-6 shadow rounded mb-6">
         <h2 class="text-2xl font-semibold mb-4">Podejmij decyzje</h2>
-        <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form method="POST" action="{{ url_for('index') }}" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="p-4 bg-gray-50 rounded">
                 <h3 class="font-semibold mb-2">Polityka fiskalna</h3>
                 <label class="block mb-1">Wydatki rządowe G:</label>
