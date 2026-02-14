@@ -1,45 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
-    <title>MakroSymulator Polska 2000+</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MakroSymulator – Kampania Edukacyjna</title>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>MakroSymulator Polska – scenariusze historyczne</h1>
-    <h3>Rok: {{ state.year }}, Tura: {{ state.turn }}</h3>
-    <p>PKB: {{ state.Y | round(2) }}</p>
-    <p>PKB potencjalny: {{ state.Y_pot | round(2) }}</p>
-    <p>Inflacja: {{ state.inflacja | round(2) }}%</p>
-    <p>Bezrobocie: {{ state.bezrobocie | round(2) }}%</p>
-    <p>Wynik edukacyjny: {{ state.score | round(2) }}</p>
+<body class="bg-gray-100 text-gray-900 font-sans">
 
-    <h4>Osiągnięcia:</h4>
-    <ul>
-        {% for ach in state.achievements %}
-            <li>{{ ach }}</li>
-        {% endfor %}
-    </ul>
+<header class="bg-blue-900 text-white p-6 shadow-lg">
+    <h1 class="text-3xl font-bold">MakroSymulator Polska – Kampania Edukacyjna</h1>
+    <p class="mt-1 text-blue-200">Ucz się gospodarki Polski od 1990 do 2010, podejmuj decyzje i zdobywaj osiągnięcia!</p>
+</header>
 
-    <form method="POST">
-        Wydatki G: <input type="number" name="G" step="1"><br>
-        Podatki T: <input type="number" name="T" step="1"><br>
-        Stopa procentowa r (%): <input type="number" name="r" step="0.1"><br>
-        Inwestycje w technologię: <input type="number" name="invest_tech" step="1"><br>
-        Wsparcie eksportu (%): <input type="number" name="export_boost" step="0.01"><br>
-        <input type="submit" value="Zastosuj decyzje">
-    </form>
-    <br>
-    <a href="{{ url_for('reset') }}">Rozpocznij nową grę</a>
+<main class="p-6 max-w-7xl mx-auto">
+    <!-- Informacje o gospodarce -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 shadow rounded hover:shadow-lg transition">
+            <h3 class="font-semibold text-gray-700">Rok / Tura</h3>
+            <p class="text-xl font-bold">{{ state.year }} / {{ state.turn }}</p>
+        </div>
+        <div class="bg-white p-4 shadow rounded hover:shadow-lg transition">
+            <h3 class="font-semibold text-gray-700">PKB</h3>
+            <p class="text-xl font-bold">{{ state.Y | round(2) }}</p>
+        </div>
+        <div class="bg-white p-4 shadow rounded hover:shadow-lg transition">
+            <h3 class="font-semibold text-gray-700">Inflacja (%)</h3>
+            <p class="text-xl font-bold">{{ state.inflacja | round(2) }}</p>
+        </div>
+        <div class="bg-white p-4 shadow rounded hover:shadow-lg transition">
+            <h3 class="font-semibold text-gray-700">Bezrobocie (%)</h3>
+            <p class="text-xl font-bold">{{ state.bezrobocie | round(2) }}</p>
+        </div>
+    </div>
 
-    <div id="graph"></div>
-    <script>
-        var graphs = {{ graphJSON | safe }};
-        Plotly.newPlot('graph', graphs.data, graphs.layout);
-    </script>
+    <!-- Panel decyzji -->
+    {% if not state.campaign_completed %}
+    <div class="bg-white p-6 shadow rounded mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Podejmij decyzje gospodarcze</h2>
+        <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 bg-gray-50 rounded">
+                <h3 class="font-semibold mb-2">Polityka fiskalna</h3>
+                <label class="block mb-1">Wydatki rządowe G:</label>
+                <input type="number" name="G" step="1" class="w-full border rounded p-2">
+                <label class="block mt-2 mb-1">Podatki T:</label>
+                <input type="number" name="T" step="1" class="w-full border rounded p-2">
+            </div>
+            <div class="p-4 bg-gray-50 rounded">
+                <h3 class="font-semibold mb-2">Polityka pieniężna & Globalizacja</h3>
+                <label class="block mb-1">Stopa procentowa r (%):</label>
+                <input type="number" name="r" step="0.1" class="w-full border rounded p-2">
+                <label class="block mt-2 mb-1">Inwestycje w technologię:</label>
+                <input type="number" name="invest_tech" step="1" class="w-full border rounded p-2">
+                <label class="block mt-2 mb-1">Wsparcie eksportu (%):</label>
+                <input type="number" name="export_boost" step="0.01" class="w-full border rounded p-2">
+            </div>
+            <div class="md:col-span-2 text-center mt-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow">Zastosuj decyzje</button>
+            </div>
+        </form>
+    </div>
+    {% else %}
+    <div class="bg-green-100 p-6 shadow rounded mb-6 text-center">
+        <h2 class="text-2xl font-bold text-green-800">Kampania zakończona!</h2>
+        <p class="mt-2 text-green-700">Gratulacje! Twoja punktacja edukacyjna: {{ state.score | round(2) }}</p>
+        <a href="{{ url_for('reset') }}" class="mt-3 inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow">Rozpocznij nową kampanię</a>
+    </div>
+    {% endif %}
 
-    <h4>Podpowiedzi edukacyjne:</h4>
-    <p>Gra uczy wpływu polityki fiskalnej (G, T) i pieniężnej (r) na PKB, inflację i bezrobocie.<br>
-       Inwestycje w technologię zwiększają PKB potencjalny.<br>
-       Wsparcie eksportu pokazuje wpływ globalizacji i gospodarki otwartej.</p>
+    <!-- Wykresy -->
+    <div class="bg-white p-6 shadow rounded mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Trendy gospodarcze</h2>
+        <div id="graph"></div>
+    </div>
+
+    <!-- Osiągnięcia -->
+    <div class="bg-white p-6 shadow rounded mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Osiągnięcia i nagrody</h2>
+        <div class="flex flex-wrap gap-3">
+            {% for ach in state.achievements %}
+                <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full font-medium">{{ ach }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Edukacja -->
+    <div class="bg-white p-6 shadow rounded">
+        <h2 class="text-2xl font-semibold mb-4">Podpowiedzi edukacyjne</h2>
+        <ul class="list-disc pl-5 space-y-1">
+            <li>Polityka fiskalna (G, T) wpływa na PKB i inflację.</li>
+            <li>Polityka pieniężna (r) stabilizuje inflację i bezrobocie.</li>
+            <li>Inwestycje w technologię zwiększają PKB potencjalny.</li>
+            <li>Wsparcie eksportu pokazuje wpływ globalizacji.</li>
+            <li>Stabilizacja gospodarki nagradzana jest osiągnięciami.</li>
+        </ul>
+    </div>
+</main>
+
+<script>
+    var graphs = {{ graphJSON | safe }};
+    Plotly.newPlot('graph', graphs.data, graphs.layout, {responsive:true});
+</script>
+
+<footer class="bg-blue-900 text-white text-center py-4 mt-6">
+    © 2026 MakroSymulator Polska – Edukacja ekonomiczna
+</footer>
 </body>
 </html>
