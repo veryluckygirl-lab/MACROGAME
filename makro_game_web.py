@@ -16,7 +16,7 @@ historical_data = {
     "2010": {"GDP": 411.2, "inflation": 2.6, "unemployment": 9.6}
 }
 
-# --- Start gry ---
+# --- Inicjalizacja gry ---
 def init_state(start_year="1990"):
     data = historical_data[start_year]
     return {
@@ -38,11 +38,10 @@ def init_state(start_year="1990"):
 
 state = init_state()
 
-# --- Aktualizacja stanu gry ---
+# --- Funkcja aktualizacji stanu gry ---
 def update_state(state, decisions):
     data = historical_data.get(str(state['year']), state)
 
-    # Parametry podręcznikowe
     c1 = 0.6
     I0 = 50
     b = 5
@@ -66,7 +65,7 @@ def update_state(state, decisions):
     # PKB potencjalny rośnie dzięki technologii
     state['Y_pot'] += decisions.get('invest_tech',0)*tech_factor
 
-    # Wstrząsy losowe i globalizacja
+    # Wstrząsy losowe
     shock = random.choices([None, "boom", "kryzys"], weights=[0.7,0.15,0.15])[0]
     if shock=="boom":
         state['Y'] += random.uniform(10,50)
@@ -103,7 +102,7 @@ def update_state(state, decisions):
         state['campaign_completed'] = True
     return state
 
-# --- Wykresy ---
+# --- Funkcja generowania wykresów ---
 def get_plot(state):
     fig = go.Figure()
     fig.add_trace(go.Scatter(y=state['history']['Y'], mode='lines+markers', name='PKB'))
