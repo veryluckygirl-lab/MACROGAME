@@ -1,29 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MakroSymulator Premium</title>
+    <title>MakroSymulator Polska 2000+</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <h1>MakroSymulator Premium</h1>
-    <h3>Rok: {{ state.turn }}</h3>
+    <h1>MakroSymulator Polska – scenariusze historyczne</h1>
+    <h3>Rok: {{ state.year }}, Tura: {{ state.turn }}</h3>
     <p>PKB: {{ state.Y | round(2) }}</p>
     <p>PKB potencjalny: {{ state.Y_pot | round(2) }}</p>
     <p>Inflacja: {{ state.inflacja | round(2) }}%</p>
     <p>Bezrobocie: {{ state.bezrobocie | round(2) }}%</p>
+    <p>Wynik edukacyjny: {{ state.score | round(2) }}</p>
+
+    <h4>Osiągnięcia:</h4>
+    <ul>
+        {% for ach in state.achievements %}
+            <li>{{ ach }}</li>
+        {% endfor %}
+    </ul>
+
     <form method="POST">
         Wydatki G: <input type="number" name="G" step="1"><br>
         Podatki T: <input type="number" name="T" step="1"><br>
         Stopa procentowa r (%): <input type="number" name="r" step="0.1"><br>
         Inwestycje w technologię: <input type="number" name="invest_tech" step="1"><br>
+        Wsparcie eksportu (%): <input type="number" name="export_boost" step="0.01"><br>
         <input type="submit" value="Zastosuj decyzje">
     </form>
     <br>
     <a href="{{ url_for('reset') }}">Rozpocznij nową grę</a>
+
     <div id="graph"></div>
     <script>
         var graphs = {{ graphJSON | safe }};
         Plotly.newPlot('graph', graphs.data, graphs.layout);
     </script>
+
+    <h4>Podpowiedzi edukacyjne:</h4>
+    <p>Gra uczy wpływu polityki fiskalnej (G, T) i pieniężnej (r) na PKB, inflację i bezrobocie.<br>
+       Inwestycje w technologię zwiększają PKB potencjalny.<br>
+       Wsparcie eksportu pokazuje wpływ globalizacji i gospodarki otwartej.</p>
 </body>
 </html>
